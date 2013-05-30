@@ -4,7 +4,7 @@ class CongressPerson < ActiveRecord::Base
   
   def name
     # "name_method: #{firstname}"
-    "#{firstname}#{name_helper(middlename)} #{lastname}#{name_helper(name_suffix)}".strip
+    @name = "#{firstname.rstrip}#{name_helper(middlename).rstrip} #{lastname.rstrip}#{name_helper(name_suffix).rstrip}"
   end
 
   def name_helper(name_part)
