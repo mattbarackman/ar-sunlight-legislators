@@ -1,14 +1,20 @@
 require 'csv'
+require_relative '../app/models/congressperson'
+
+DESIRED_FIELDS = %w(title firstname middlename lastname name_suffix email webform phone fax website party gender
+                    birthdate twitter_id in_office state)
 
 class SunlightLegislatorsImporter
   def self.import(filename)
     csv = CSV.new(File.open(filename), :headers => true)
     csv.each do |row|
+      args = {}
       row.each do |field, value|
-        # TODO: begin
-        raise NotImplementedError, "TODO: figure out what to do with this row and do it!"
-        # TODO: end
+        args[field.to_sym] = value if DESIRED_FIELDS.include?(field)
       end
+      temp = CongressPerson.new(args)
+      p temp.name
+      temp.save
     end
   end
 end
