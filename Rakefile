@@ -10,7 +10,7 @@ end
 
 desc "seed the database"
 task "db:seed" do
-  system(ruby 'lib/sunlight_legislators_importer.rb congress_people_data.csv')
+  system('ruby lib/sunlight_legislators_importer.rb congress_people_data.csv')
 end
 
 

@@ -5,7 +5,7 @@ DESIRED_FIELDS = %w(title firstname middlename lastname name_suffix email webfor
                     birthdate twitter_id in_office state)
 
 class SunlightLegislatorsImporter
-  def self.import(filename)
+  def self.import!(filename)
     csv = CSV.new(File.open(filename), :headers => true)
     csv.each do |row|
       args = {}
@@ -16,20 +16,22 @@ class SunlightLegislatorsImporter
     end
   end
 
-  def self.update_names
+  def self.scrub_data!
     puts "updated"
     congresspeople = CongressPerson.all
     congresspeople.each do |congressperson|
       id = congressperson.id
-      CongressPerson.update(id, { :name => congressperson.name })     
+      CongressPerson.update(id, { :name => congressperson.name_scrub,
+                                  :phone => congressperson.phone_scrub,
+                                  :fax => congressperson.fax_scrub})
     end 
   end
 end
 
 begin
   raise ArgumentError, "you must supply a filename argument" unless ARGV.length == 1
-  SunlightLegislatorsImporter.import(ARGV[0])
-  SunlightLegislatorsImporter.update_names
+  SunlightLegislatorsImporter.import!(ARGV[0])
+  SunlightLegislatorsImporter.scrub_data!
 rescue ArgumentError => e
   $stderr.puts "Usage: ruby sunlight_legislators_importer.rb <filename>"
 rescue NotImplementedError => e
